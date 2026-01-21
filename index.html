@@ -1,5 +1,669 @@
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>My Home</title></head>
-<body><h1>Hello, GitHub Pages!</h1></body>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Personal resume homepage" />
+  <meta name="author" content="Your Name" />
+  <title>Your Name | Resume</title>
+
+  <!-- Optional: nice preview when sharing links -->
+  <meta property="og:title" content="Your Name | Resume" />
+  <meta property="og:description" content="A clean one-page resume website." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* =========================
+       Design tokens
+    ========================== */
+    :root{
+      --bg: #0b0f17;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --faint: rgba(255,255,255,.48);
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --accent: #7c5cff;   /* change me */
+      --accent-2: #00d4ff; /* change me */
+      --radius: 18px;
+      --maxw: 1060px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    /* Light mode */
+    [data-theme="light"]{
+      --bg: #f6f7fb;
+      --panel: rgba(0,0,0,.04);
+      --panel-2: rgba(0,0,0,.06);
+      --text: rgba(0,0,0,.88);
+      --muted: rgba(0,0,0,.64);
+      --faint: rgba(0,0,0,.48);
+      --border: rgba(0,0,0,.12);
+      --shadow: 0 16px 50px rgba(0,0,0,.10);
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 18% 12%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 70%),
+        radial-gradient(800px 450px at 85% 18%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 75%),
+        radial-gradient(700px 380px at 50% 110%, rgba(255,255,255,.06), transparent 70%),
+        var(--bg);
+      line-height: 1.55;
+      letter-spacing: 0.1px;
+    }
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 28px 18px 90px; }
+
+    /* =========================
+       Top bar
+    ========================== */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+    .dot{
+      width: 12px; height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .brand b{ font-size: 14px; letter-spacing: .3px; }
+    .nav{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill{
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .pill:hover{ background: color-mix(in srgb, var(--panel-2) 90%, transparent); color: var(--text); }
+    .btn{
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 85%, transparent), color-mix(in srgb, var(--panel-2) 85%, transparent));
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover{ color: var(--text); }
+
+    /* =========================
+       Hero
+    ========================== */
+    .hero{
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 88%, transparent), color-mix(in srgb, var(--panel-2) 88%, transparent));
+      border-radius: calc(var(--radius) + 8px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before{
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: radial-gradient(700px 220px at 18% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+                  radial-gradient(700px 240px at 88% 10%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 70%);
+      pointer-events: none;
+      opacity: .9;
+    }
+    .hero-inner{
+      position: relative;
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 860px){
+      .hero-inner{ grid-template-columns: 1fr; }
+    }
+    .name{
+      font-size: 34px;
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: .2px;
+    }
+    .headline{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 62ch;
+    }
+    .badges{
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .badge{
+      font-size: 12.5px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 90%, transparent);
+      color: var(--muted);
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .badge strong{ color: var(--text); font-weight: 600; }
+    .hero-card{
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .hero-card h3{
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .meta{
+      display: grid;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .meta a{ color: var(--text); }
+    .meta .k{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+    .meta .k:first-child{ border-top: 0; padding-top: 0; }
+
+    /* =========================
+       Sections / cards
+    ========================== */
+    .grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .section{
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 86%, transparent);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.10);
+    }
+    .section h2{
+      margin: 0 0 12px;
+      font-size: 15px;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .section h2 small{
+      font-size: 12px;
+      color: var(--faint);
+      font-family: var(--mono);
+      letter-spacing: .2px;
+    }
+    .list{
+      display: grid;
+      gap: 12px;
+    }
+    .item{
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      border-radius: 14px;
+      padding: 12px 12px;
+    }
+    .row{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 14px;
+      align-items: baseline;
+    }
+    .title{
+      font-weight: 650;
+      color: var(--text);
+      font-size: 14.5px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .time{
+      color: var(--faint);
+      font-size: 12.5px;
+      font-family: var(--mono);
+    }
+    .desc{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .bullets{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .bullets li{ margin: 6px 0; }
+    .tags{
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tag{
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel-2) 88%, transparent);
+      font-family: var(--mono);
+    }
+
+    /* Full-width section */
+    .wide{
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 86%, transparent);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .cols{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 900px){
+      .cols{ grid-template-columns: 1fr; }
+    }
+
+    /* Footer */
+    footer{
+      margin-top: 22px;
+      color: var(--faint);
+      font-size: 12.5px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .sep{ opacity: .5; }
+
+    /* Print friendly */
+    @media print{
+      .topbar{ display:none; }
+      body{ background: #fff !important; color: #111 !important; }
+      .hero, .section, .wide, .item{
+        box-shadow: none !important;
+        background: #fff !important;
+      }
+      a{ text-decoration: none !important; }
+      .wrap{ padding: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" title="Resume Home">
+        <span class="dot" aria-hidden="true"></span>
+        <b>Your Name</b>
+      </div>
+
+      <nav class="nav" aria-label="quick navigation">
+        <a class="pill" href="#about">About</a>
+        <a class="pill" href="#experience">Experience</a>
+        <a class="pill" href="#projects">Projects</a>
+        <a class="pill" href="#education">Education</a>
+        <a class="pill" href="#contact">Contact</a>
+        <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">
+          <span aria-hidden="true">🌓</span> Theme
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" aria-label="intro">
+      <div class="hero-inner">
+        <div>
+          <h1 class="name">Your Name</h1>
+          <p class="headline">
+            Headline / Title. 一句话介绍你是谁、做什么方向（例如：Systems + ML | C/C++ | Embedded | Causal Inference）。
+          </p>
+
+          <div class="badges" aria-label="highlights">
+            <span class="badge"><strong>Focus</strong> Research / Engineering</span>
+            <span class="badge"><strong>Stack</strong> C/C++ · Python · Linux</span>
+            <span class="badge"><strong>Interest</strong> OS · Embedded · AI</span>
+          </div>
+        </div>
+
+        <aside class="hero-card" id="contact" aria-label="contact card">
+          <h3>Contact</h3>
+          <div class="meta">
+            <div class="k">
+              <span>Email</span>
+              <a href="mailto:yourname@example.com">yourname@example.com</a>
+            </div>
+            <div class="k">
+              <span>GitHub</span>
+              <a href="https://github.com/yourusername" target="_blank" rel="noreferrer">github.com/yourusername</a>
+            </div>
+            <div class="k">
+              <span>Homepage</span>
+              <a href="https://yourusername.github.io" target="_blank" rel="noreferrer">yourusername.github.io</a>
+            </div>
+            <div class="k">
+              <span>Location</span>
+              <span>City, Country</span>
+            </div>
+            <div class="k">
+              <span>CV PDF</span>
+              <a href="#" target="_blank" rel="noreferrer">Download</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- GRID SECTIONS -->
+    <section class="grid" aria-label="main sections">
+      <!-- ABOUT -->
+      <div class="section" id="about">
+        <h2>About <small>#overview</small></h2>
+        <div class="item">
+          <div class="desc">
+            这里写 4–6 行简介：你擅长什么、做过什么、你正在做的方向、你希望去哪里（读博/求职/合作）。
+            尽量包含可量化的信息：例如“X 年经验”“发表/获奖/开源贡献”“负责过某模块”等。
+          </div>
+        </div>
+
+        <div class="list" style="margin-top:12px">
+          <div class="item">
+            <div class="row">
+              <div class="title">Core strengths</div>
+              <div class="time">关键词</div>
+            </div>
+            <div class="tags">
+              <span class="tag">Problem Solving</span>
+              <span class="tag">Systems</span>
+              <span class="tag">Research</span>
+              <span class="tag">Reproducibility</span>
+              <span class="tag">Performance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="section">
+        <h2>Skills <small>#toolbox</small></h2>
+        <div class="list">
+          <div class="item">
+            <div class="row">
+              <div class="title">Programming</div>
+              <div class="time">Level</div>
+            </div>
+            <p class="desc">C/C++ · Python · (Rust/Go/Java 可选) · Git · Linux</p>
+          </div>
+          <div class="item">
+            <div class="row">
+              <div class="title">Domains</div>
+              <div class="time">Focus</div>
+            </div>
+            <p class="desc">Operating Systems · Embedded · ML/LLM · Causal Discovery · Data Mining</p>
+          </div>
+          <div class="item">
+            <div class="row">
+              <div class="title">Tools</div>
+              <div class="time">Daily</div>
+            </div>
+            <p class="desc">Docker · CMake · LaTeX · CI/CD · (Keil/STM32CubeIDE 可选)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="section" id="experience">
+        <h2>Experience <small>#timeline</small></h2>
+        <div class="list">
+          <div class="item">
+            <div class="row">
+              <div>
+                <div class="title">Role @ Organization</div>
+                <div class="sub">Team / Lab / Company · City</div>
+              </div>
+              <div class="time">2024.01 – Present</div>
+            </div>
+            <p class="desc">
+              一句话说明你负责的方向/目标（例如：构建 XX 系统，优化 XX 指标）。
+            </p>
+            <ul class="bullets">
+              <li>成就/影响 1（尽量量化：速度提升 X%、成本下降 X、用户数 X…）</li>
+              <li>技术点 2（例如：设计架构、实现模块、做实验与评估…）</li>
+              <li>合作/产出 3（论文、专利、开源、报告、演讲…）</li>
+            </ul>
+            <div class="tags">
+              <span class="tag">C++</span>
+              <span class="tag">Linux</span>
+              <span class="tag">ML</span>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="row">
+              <div>
+                <div class="title">Role @ Organization</div>
+                <div class="sub">Team / Lab / Company · City</div>
+              </div>
+              <div class="time">2022.09 – 2023.12</div>
+            </div>
+            <p class="desc">补充第二段经历（可以更短）。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="section" id="projects">
+        <h2>Projects <small>#selected</small></h2>
+        <div class="list">
+          <div class="item">
+            <div class="row">
+              <div>
+                <div class="title">Project Name</div>
+                <div class="sub">一句话说明做什么、为什么重要</div>
+              </div>
+              <div class="time">
+                <a href="#" target="_blank" rel="noreferrer">Link</a>
+              </div>
+            </div>
+            <p class="desc">
+              2–3 句描述：你的贡献 + 结果。比如“提出 XX 方法，提升 XX 指标；实现 XX 模块，支持 XX 场景。”
+            </p>
+            <ul class="bullets">
+              <li>亮点 1：可量化成果 / demo / 用户</li>
+              <li>亮点 2：关键技术栈与难点</li>
+            </ul>
+            <div class="tags">
+              <span class="tag">Open-source</span>
+              <span class="tag">LLM</span>
+              <span class="tag">Causal</span>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="row">
+              <div>
+                <div class="title">Project Name</div>
+                <div class="sub">一句话说明做什么、你的角色</div>
+              </div>
+              <div class="time">
+                <a href="#" target="_blank" rel="noreferrer">Link</a>
+              </div>
+            </div>
+            <p class="desc">你也可以把“课程项目/比赛/开源贡献”放这里。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WIDE: Publications + Education -->
+    <section class="wide" aria-label="secondary sections">
+      <div class="cols">
+        <div>
+          <h2 style="margin:0 0 12px; color:var(--muted); text-transform:uppercase; letter-spacing:.35px;">
+            Publications / Awards <small style="font-family:var(--mono); color:var(--faint);">#output</small>
+          </h2>
+
+          <div class="list">
+            <div class="item">
+              <div class="row">
+                <div>
+                  <div class="title">Paper / Award Title</div>
+                  <div class="sub">Venue / Organization · Co-authors</div>
+                </div>
+                <div class="time">2025</div>
+              </div>
+              <p class="desc">一句话贡献或结果（例如：提出 XX，验证于 XX 数据集）。</p>
+            </div>
+
+            <div class="item">
+              <div class="row">
+                <div>
+                  <div class="title">Paper / Award Title</div>
+                  <div class="sub">Venue / Organization</div>
+                </div>
+                <div class="time">2024</div>
+              </div>
+              <p class="desc">也可以写“专利 / 竞赛奖 / 奖学金”等。</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="education">
+          <h2 style="margin:0 0 12px; color:var(--muted); text-transform:uppercase; letter-spacing:.35px;">
+            Education <small style="font-family:var(--mono); color:var(--faint);">#background</small>
+          </h2>
+
+          <div class="list">
+            <div class="item">
+              <div class="row">
+                <div>
+                  <div class="title">University Name</div>
+                  <div class="sub">M.S./B.S. in Major · Advisor (optional)</div>
+                </div>
+                <div class="time">2023 – 2026</div>
+              </div>
+              <ul class="bullets">
+                <li>研究方向 / 课程：A · B · C</li>
+                <li>GPA / Rank / Scholarships（可选）</li>
+              </ul>
+            </div>
+
+            <div class="item">
+              <div class="row">
+                <div>
+                  <div class="title">University Name</div>
+                  <div class="sub">B.S. in Major</div>
+                </div>
+                <div class="time">2019 – 2023</div>
+              </div>
+              <p class="desc">一句话补充（可选）。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer aria-label="footer">
+      <span>© <span id="year"></span> Your Name · Built with pure HTML/CSS</span>
+      <span class="sep">·</span>
+      <span>
+        <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">Back to top ↑</a>
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    // Theme toggle with localStorage
+    (function () {
+      const root = document.documentElement;
+      const btn = document.getElementById("themeBtn");
+      const saved = localStorage.getItem("theme");
+      if (saved) root.setAttribute("data-theme", saved);
+
+      btn.addEventListener("click", () => {
+        const current = root.getAttribute("data-theme") || "dark";
+        const next = current === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
 </html>
